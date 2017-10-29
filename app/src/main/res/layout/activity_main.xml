@@ -12,6 +12,12 @@
         android:layout_height="wrap_content"
         android:text="Take Picture" />
 
+    <ListView
+        android:id="@+id/picList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
     <ImageView
         android:id="@+id/newPicture"
         android:layout_width="match_parent"

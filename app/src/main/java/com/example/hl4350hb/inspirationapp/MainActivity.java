@@ -15,12 +15,15 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     // Creates global references to widgets.
     Button mPicButton;
     ImageView mNewPicture;
+    ListView mListView;
 
 
     // Identifier code for the camera returning a result.
@@ -52,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
     // Holds the image in variable.
     private Bitmap mImage;
 
+
+
+
+    // Will contain the notes for each picture.
+    ArrayList<String> notesArray = new ArrayList<String>();
+    // Will contain the image ID for each picture.
+    ArrayList<Integer> imageIdArray = new ArrayList<Integer>();
 
 
 
@@ -81,6 +92,24 @@ public class MainActivity extends AppCompatActivity {
                 takePhoto();
             }
         });
+
+
+
+
+        mListView = (ListView) findViewById(R.id.picList);
+// TODO update ArrayLists from database and then pass to CustomList
+        CustomList adapter = new CustomList(MainActivity.this, notesArray, imageIdArray);
+
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "You Clicked " + notesArray.get(+ position), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
 
@@ -125,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 // Save image
                 MediaStore.Images.Media.insertImage(getContentResolver(), mImage, "InspirationApp", "Photo take by InspirationApp");
             } else {
-                Toast.makeText(this, "All pictures will not be saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "All pictures will saved..just kiddin!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -226,3 +255,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
+
+
+// References:
+    // picture list setup - https://www.learn2crack.com/2013/10/android-custom-listview-images-text-example.html

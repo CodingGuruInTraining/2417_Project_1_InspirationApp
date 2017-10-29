@@ -32,25 +32,27 @@ public class MainActivity extends AppCompatActivity {
 
     // Logging tag to identify custom messages.
     private static final String TAG = "thisIsMyTag";
+    // Key value used to maintain image during rotations.
+    private static final String IMAGE_FILEPATH_KEY = "aKeyForFilepath";
+
 
     // Creates global references to widgets.
     Button mPicButton;
     ImageView mNewPicture;
 
+
     // Identifier code for the camera returning a result.
     private static final int CAMERA_ACCESS_REQUEST_CODE = 0;
+    // Identifier code for returning results.
+    private static final int SAVE_IMAGE_PERMISSION_REQUEST_CODE = 1001;
+
 
     // Will contain the location of the file on device.
     private String mImagePath;
-
     // Holds the image in variable.
     private Bitmap mImage;
 
-    // Key value used to maintain image during rotations.
-    private static final String IMAGE_FILEPATH_KEY = "aKeyForFilepath";
 
-    // Identifier code for returning results.
-    private static final int SAVE_IMAGE_PERMISSION_REQUEST_CODE = 1001;
 
 
 //     ############################################################
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-
+        // Fits picture to ImageView widget.
         if (hasFocus && mImagePath != null) {
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
@@ -116,9 +118,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    @Override   // Callback for adding an image to the device's MediaStore.
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
+        if (requestCode == SAVE_IMAGE_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Save image
+                MediaStore.Images.Media.insertImage(getContentResolver(), mImage, "InspirationApp", "Photo take by InspirationApp");
+            } else {
+                Toast.makeText(this, "All pictures will not be saved", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 

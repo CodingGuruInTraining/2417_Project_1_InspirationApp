@@ -14,9 +14,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     Button mPicButton;
     ImageView mNewPicture;
     ListView mListView;
+    EditText mNoteEntry;
 
 
     // Identifier code for the camera returning a result.
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         // Defines widget variables for global use.
         mPicButton = (Button) findViewById(R.id.picButton);
         mNewPicture = (ImageView) findViewById(R.id.newPicture);
+        mNoteEntry = (EditText) findViewById(R.id.noteEntry);
 
         // Defines click event for button.
         mPicButton.setOnClickListener(new View.OnClickListener() {
@@ -97,18 +102,38 @@ public class MainActivity extends AppCompatActivity {
 
 
         mListView = (ListView) findViewById(R.id.picList);
-// TODO update ArrayLists from database and then pass to CustomList
+// TODO update ArrayLists from database and then pass to CustomList here
         CustomList adapter = new CustomList(MainActivity.this, notesArray, imageIdArray);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+// TODO change to an event or something
                 Toast.makeText(MainActivity.this, "You Clicked " + notesArray.get(+ position), Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Forces widgets to stay where they are when the keyboard appears.
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
+
+        mNoteEntry.setFocusableInTouchMode(true);
+        mNoteEntry.requestFocus();
+        mNoteEntry.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+
+
+
+
+                    Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -137,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
         if (hasFocus && mImagePath != null) {
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
+
+// TODO add notes here?
+            mNoteEntry.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -154,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 // Save image
                 MediaStore.Images.Media.insertImage(getContentResolver(), mImage, "InspirationApp", "Photo take by InspirationApp");
             } else {
-                Toast.makeText(this, "All pictures will saved..just kiddin!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "All pictures will saved..NOT!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -193,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
                 imageFile = File.createTempFile(imageFilename, ".jpg", storageDirectory);
                 // Save the image's location to be used later.
                 mImagePath = imageFile.getAbsolutePath();
+
+                Log.d(TAG, "the image id is " + R.drawable.image2);
                 // Defines the image location and how to access it for the camera.
                 imageFileUri = FileProvider.getUriForFile(MainActivity.this, "com.example.hl4350hb.inspirationapp", imageFile);
             } catch (IOException err) {
@@ -262,3 +293,4 @@ public class MainActivity extends AppCompatActivity {
 
 // References:
     // picture list setup - https://www.learn2crack.com/2013/10/android-custom-listview-images-text-example.html
+    // adjust nothing when keyboard active - https://stackoverflow.com/questions/4207880/android-how-do-i-prevent-the-soft-keyboard-from-pushing-my-view-up

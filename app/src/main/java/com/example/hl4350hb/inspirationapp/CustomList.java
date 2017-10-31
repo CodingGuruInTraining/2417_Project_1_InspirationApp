@@ -19,6 +19,7 @@ public class CustomList extends ArrayAdapter<String> {
 
     // Constructor.
     public CustomList(Activity context, ArrayList<String> notesArray, ArrayList<Integer> imageIdArray) {
+        // Extends an ArrayAdapter.
         super(context, R.layout.list_item, notesArray);
         this.context = context;
         this.notesArray = notesArray;

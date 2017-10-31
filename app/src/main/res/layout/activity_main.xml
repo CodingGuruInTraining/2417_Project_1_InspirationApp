@@ -6,22 +6,37 @@
     android:layout_height="match_parent"
     tools:context="com.example.hl4350hb.inspirationapp.MainActivity">
 
-    <Button
-        android:id="@+id/picButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Take Picture" />
 
     <ListView
         android:id="@+id/picList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         />
+
+    <EditText
+        android:id="@+id/noteEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:visibility="invisible"
+        android:hint="Enter a note here about your amazing pic!"/>
 
     <ImageView
         android:id="@+id/newPicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/picButton" />
+        android:layout_weight="1"
+
+         />
+
+
+    <Button
+        android:id="@+id/picButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Picture"
+        android:layout_alignParentBottom="true"/>
+
 
 </RelativeLayout>

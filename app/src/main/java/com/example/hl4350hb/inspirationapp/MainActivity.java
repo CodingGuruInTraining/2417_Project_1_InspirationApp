@@ -62,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    CustomList adapter;
+
 
     // Will contain the notes for each picture.
     ArrayList<String> notesArray = new ArrayList<String>();
     // Will contain the image ID for each picture.
-    ArrayList<Integer> imageIdArray = new ArrayList<Integer>();
+    ArrayList<String> imageIdArray = new ArrayList<String>();
 
 
 
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.picList);
 // TODO update ArrayLists from database and then pass to CustomList here
-        CustomList adapter = new CustomList(MainActivity.this, notesArray, imageIdArray);
+        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,8 +127,12 @@ public class MainActivity extends AppCompatActivity {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
 
+                    String newNote = mNoteEntry.getText().toString();
+                    adapter.addNewEntry(newNote, mImagePath);
+                    mNoteEntry.getText().clear();
+                    mNoteEntry.setVisibility(View.GONE);
 
-
+                    mNewPicture.setImageResource(android.R.color.transparent);
 
                     Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
                     return true;
@@ -294,3 +300,7 @@ public class MainActivity extends AppCompatActivity {
 // References:
     // picture list setup - https://www.learn2crack.com/2013/10/android-custom-listview-images-text-example.html
     // adjust nothing when keyboard active - https://stackoverflow.com/questions/4207880/android-how-do-i-prevent-the-soft-keyboard-from-pushing-my-view-up
+    // ENTER key event - https://stackoverflow.com/questions/8233586/android-execute-function-after-pressing-enter-for-edittext
+    // loading picture from string - https://stackoverflow.com/questions/3004713/get-content-uri-from-file-path-in-android
+    // "hiding" imageview - https://stackoverflow.com/questions/2859212/how-to-clear-an-imageview-in-android
+

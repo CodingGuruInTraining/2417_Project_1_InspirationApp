@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.hl4350hb.inspirationapp.MainActivity">
 
-
-    <ListView
-        android:id="@+id/picList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        />
-
     <EditText
         android:id="@+id/noteEntry"
         android:layout_width="wrap_content"
@@ -21,6 +13,17 @@
         android:inputType="textMultiLine"
         android:visibility="invisible"
         android:hint="Enter a note here about your amazing pic!"/>
+
+
+    <ListView
+        android:id="@+id/picList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@+id/noteEntry"
+        />
+
+
 
     <ImageView
         android:id="@+id/newPicture"

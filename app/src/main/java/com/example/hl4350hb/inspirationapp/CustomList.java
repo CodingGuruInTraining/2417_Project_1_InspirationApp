@@ -2,6 +2,9 @@ package com.example.hl4350hb.inspirationapp;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +12,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class CustomList extends ArrayAdapter<String> {
 
     private final Activity context;
     private final ArrayList<String> notesArray;
-    private final ArrayList<Integer> imageIdArray;
+    private final ArrayList<String> imageIdArray;
 
     // Constructor.
-    public CustomList(Activity context, ArrayList<String> notesArray, ArrayList<Integer> imageIdArray) {
+    public CustomList(Activity context, ArrayList<String> notesArray, ArrayList<String> imageIdArray) {
         // Extends an ArrayAdapter.
         super(context, R.layout.list_item, notesArray);
         this.context = context;
@@ -35,12 +39,14 @@ public class CustomList extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         noteTextView.setText(notesArray.get(position));
 
-        imageView.setImageResource(imageIdArray.get(position));
+
+        imageView.setImageURI(Uri.fromFile(new File(imageIdArray.get(position))));
+//        imageView.setImageResource(imageIdArray.get(position));
         return rowView;
     }
 
 //TODO maybe pass a safe-word and validate
-    public void addNewEntry(String note, int imageId) {
+    public void addNewEntry(String note, String imageId) {
         notesArray.add(note);
         imageIdArray.add(imageId);
         notifyDataSetChanged();

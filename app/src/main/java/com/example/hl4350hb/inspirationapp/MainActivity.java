@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> notesArray = new ArrayList<String>();
     // Will contain the image ID for each picture.
     ArrayList<String> imageIdArray = new ArrayList<String>();
+    ArrayList<Long> dateArray = new ArrayList<Long>();
 
 
 
@@ -105,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         mListView = (ListView) findViewById(R.id.picList);
-// TODO update ArrayLists from database and then pass to CustomList here
-        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray);
+// TODO retrieve ArrayLists from database and then pass to CustomList here
+        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,12 +130,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                     String newNote = mNoteEntry.getText().toString();
-                    adapter.addNewEntry(newNote, mImagePath);
+                    adapter.addNewEntry(newNote, mImagePath, currTime);
                     mNoteEntry.getText().clear();
                     mNoteEntry.setVisibility(View.GONE);
 
                     mNewPicture.setImageResource(android.R.color.transparent);
-
+// TODO add to database here someday
                     Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -170,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
 
-// TODO add notes here?
             mNoteEntry.setVisibility(View.VISIBLE);
 
         }
@@ -305,4 +305,5 @@ public class MainActivity extends AppCompatActivity {
     // ENTER key event - https://stackoverflow.com/questions/8233586/android-execute-function-after-pressing-enter-for-edittext
     // loading picture from string - https://stackoverflow.com/questions/3004713/get-content-uri-from-file-path-in-android
     // "hiding" imageview - https://stackoverflow.com/questions/2859212/how-to-clear-an-imageview-in-android
+    // date format - http://www.java2s.com/Tutorial/Java/0120__Development/Convertstringdatetolongvalue.htm
 

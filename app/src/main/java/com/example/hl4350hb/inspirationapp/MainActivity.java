@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    CustomList adapter;
+    protected CustomList adapter;
+    private long currTime;
 
 
     // Will contain the notes for each picture.
@@ -213,8 +214,9 @@ public class MainActivity extends AppCompatActivity {
         if (pictureIntent.resolveActivity(getPackageManager()) == null) {
             Toast.makeText(MainActivity.this, "A camera is needed to take pictures", Toast.LENGTH_LONG).show();
         } else {
+            currTime = new Date().getTime();
             // Designate the filename for picture using the current time.
-            String imageFilename = "inspiration_from_" + new Date().getTime();
+            String imageFilename = "inspiration_from_" + currTime; // new Date().getTime();
 
             // Designate temporary location of new file.
             File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);

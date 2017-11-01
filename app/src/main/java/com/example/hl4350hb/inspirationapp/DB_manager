@@ -1,0 +1,105 @@
+//package com.example.hl4350hb.inspirationapp;
+//
+//import android.content.ContentValues;
+//import android.content.Context;
+//import android.database.Cursor;
+//import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteOpenHelper;
+//import android.provider.BaseColumns;
+//
+//import static com.example.hl4350hb.inspirationapp.DBmanager.FeedEntry.SQL_CREATE_ENTRIES;
+//import static com.example.hl4350hb.inspirationapp.DBmanager.FeedEntry.SQL_DELETE_ENTRIES;
+//
+///**
+// *
+// */
+//
+//public final class DBmanager {
+//
+//
+//    // Setting to private prevents accidentally instantiating the Contract class.
+//    private DBmanager() {}
+//
+//    public static class FeedEntry implements BaseColumns {
+//        public static final String TABLE_NAME = "picTable";
+//        public static final String ID_COL = "_id";
+//        public static final String NOTE_COL = "notes";
+//        public static final String IMG_COL = "imageID";
+//        public static final String DATE_COL = "datetaken";
+//
+//        protected static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
+//                FeedEntry.TABLE_NAME + " (" + FeedEntry._ID + " INTEGER PRIMARY KEY," +
+//                FeedEntry.NOTE_COL + " TEXT," + FeedEntry.IMG_COL + " TEXT," +
+//                FeedEntry.DATE_COL + " INTEGER UNIQUE)";
+//
+//        protected static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
+//    }
+//
+//    public class FeedReaderDbHelper extends SQLiteOpenHelper {
+//        // If you change the database schema, you must increment the
+//        // database version.
+//        public static final int DATABASE_VERSION = 1;
+//        public static final String DATABASE_NAME = "FeedReader.db";
+//
+//        public FeedReaderDbHelper(Context context) {
+//            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+//        }
+//
+//        public void onCreate(SQLiteDatabase db) {
+//            db.execSQL(SQL_CREATE_ENTRIES);
+//        }
+//
+//        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//            // This database is only a cache for online data, so its upgrade
+//            // policy is to simply discard the data and start over.
+//            db.execSQL(SQL_DELETE_ENTRIES);
+//            onCreate(db);
+//        }
+//    }
+//
+//    FeedReaderDbHelper mDbHelper = new FeedReaderDbHelper(getContext());
+//
+//    public long addData() {
+//        // Gets the data repository in write mode.
+//        SQLiteDatabase db = mDbHelper.getWriteableDatabase();
+//
+//        // Create a new map of values, where column names are the keys.
+//        ContentValues values = new ContentValues();
+//        values.put(FeedEntry.NOTE_COL, title);
+//        values.put(FeedEntry.IMG_COL, title);
+//        values.put(FeedEntry.DATE_COL, title);
+//
+//        // Insert the new row, returning the primary key value of the new row.
+//        long newRowId = db.insert(FeedEntry.TABLE_NAME, null, values);
+//        return newRowId;
+//    }
+//
+//    public void readData() {
+//        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+//
+//        // Define a projection that specifies which columns from the
+//        // database you will actually use after this query.
+//        String[] projection = {FeedEntry._ID, FeedEntry.NOTE_COL, FeedEntry.IMG_COL, FeedEntry.DATE_COL};
+//
+//        // Filter results where "title" = 'My Title'
+//        String selection = FeedEntry.DATE_COL + " = ?";
+//        String[] selectionArgs = {"My Title"};
+//
+//        // How you want the results sorted in the resulting Cursor
+//        String sortOrder = FeedEntry.DATE_COL + " DESC";
+//
+//        Cursor cursor = db.query(
+//                FeedEntry.TABLE_NAME, // table to query
+//                projection,           // columns to return
+//                selection,            // columns for the WHERE clause
+//                selectionArgs,        // values for the WHERE clause
+//                null,
+//                sortOrder             // the sort order
+//        );
+//    }
+//}
+//
+//// https://developer.android.com/training/basics/data-storage/databases.html
+//
+//
+//}

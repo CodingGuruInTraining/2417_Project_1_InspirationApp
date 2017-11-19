@@ -306,4 +306,5 @@ public class MainActivity extends AppCompatActivity {
     // loading picture from string - https://stackoverflow.com/questions/3004713/get-content-uri-from-file-path-in-android
     // "hiding" imageview - https://stackoverflow.com/questions/2859212/how-to-clear-an-imageview-in-android
     // date format - http://www.java2s.com/Tutorial/Java/0120__Development/Convertstringdatetolongvalue.htm
+    // limiting character limit - https://stackoverflow.com/questions/9149846/can-i-limit-textviews-number-of-characters
 

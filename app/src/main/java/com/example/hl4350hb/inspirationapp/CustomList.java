@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,14 @@ public class CustomList extends ArrayAdapter<String> {
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context. getLayoutInflater();
         View rowView = inflater.inflate(R.layout.list_item, null, true);
-        TextView noteTextView = (TextView) rowView.findViewById(R.id.txt);
+        final TextView noteTextView = (TextView) rowView.findViewById(R.id.txt);
+        noteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noteTextView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(1000) {
+                }});
+            }
+        });
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         noteTextView.setText(notesArray.get(position));

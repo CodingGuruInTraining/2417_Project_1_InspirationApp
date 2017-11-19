@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,7 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CustomList.CustomListListener {
 //     ############################################################
 
 //       ##################     GLOBALS     ######################
@@ -291,6 +292,20 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Prompts user to accept the permission request.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_IMAGE_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void displayOption(int which_option) {
+        switch (which_option) {
+            case 1:
+                // TODO display note to edit
+            case 2:
+                // TODO display image full screen
+            case 3:
+                // TODO display search widgets
+            default:
+                // TODO something
         }
     }
 }

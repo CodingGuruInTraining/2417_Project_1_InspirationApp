@@ -32,8 +32,11 @@ public class CustomList extends ArrayAdapter<String> {
     private final DateFormat dateFormatter2;
     private final Calendar cal;
 
+    private CustomListListener mCustomListListener;
+
     // Constructor.
-    public CustomList(Activity context, ArrayList<String> notesArray, ArrayList<String> imageIdArray, ArrayList<Long> dateArray) {
+    public CustomList(Activity context, ArrayList<String> notesArray,
+                      ArrayList<String> imageIdArray, ArrayList<Long> dateArray) {
         // Extends an ArrayAdapter.
         super(context, R.layout.list_item, notesArray);
         this.context = context;
@@ -69,9 +72,6 @@ public class CustomList extends ArrayAdapter<String> {
 
         TextView dateTextView = (TextView) rowView.findViewById(R.id.datetxt);
         dateTextView.setText(dateFormatter.format(dateArray.get(position)));
-//        cal.setTimeInMillis(dateArray.get(position));
-//        dateTextView.setText(DateFormat.format("M-dd-yyyy hh:mm:ss", cal).toString());
-//        dateTextView.setText(dateFormatter2.format(dateArray.get(position)));
 
         imageView.setImageURI(Uri.fromFile(new File(imageIdArray.get(position))));
 //        imageView.setImageResource(imageIdArray.get(position));
@@ -85,5 +85,9 @@ public class CustomList extends ArrayAdapter<String> {
         dateArray.add(currTime);
         notifyDataSetChanged();
 
+    }
+
+    public interface CustomListListener {
+        void displayOption(int which_option);
     }
 }

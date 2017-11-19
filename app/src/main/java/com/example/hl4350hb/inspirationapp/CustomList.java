@@ -53,8 +53,14 @@ public class CustomList extends ArrayAdapter<String> {
         noteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                noteTextView.setFilters(new InputFilter[] {new InputFilter.LengthFilter(1000) {
-                }});
+                int height = noteTextView.getLayoutParams().height;
+                if (height < 1000) {
+                    noteTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1000)});
+                    noteTextView.getLayoutParams().height = 500;
+                } else {
+                    noteTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
+                    noteTextView.getLayoutParams().height = 50;
+                }
             }
         });
 

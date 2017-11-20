@@ -301,14 +301,19 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
         }
     }
 
+//    @Override
+//    public void displayOption(int which_option, String text) {
+//        Intent intent = new Intent(this, DisplayActivity.class);
+//        intent.putExtra(OPT_KEY, which_option);
+//        intent.putExtra(TEXT_KEY, text);
+//        if (intent != null) {
+//            startActivity(intent);
+//        }
+//    }
+
     @Override
-    public void displayOption(int which_option, String text) {
-        Intent intent = new Intent(this, DisplayActivity.class);
-        intent.putExtra(OPT_KEY, which_option);
-        intent.putExtra(TEXT_KEY, text);
-        if (intent != null) {
-            startActivity(intent);
-        }
+    public void displayOption(Bundle bundle) {
+        //
     }
 }
 

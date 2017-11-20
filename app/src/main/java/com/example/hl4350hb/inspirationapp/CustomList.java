@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_OK;
 import static android.text.format.DateFormat.format;
 
 public class CustomList extends ArrayAdapter<String> {
@@ -57,7 +59,15 @@ public class CustomList extends ArrayAdapter<String> {
         noteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCustomListListener.displayOption(1, noteTextView.getText().toString());
+                Intent i = new Intent();
+                i.putExtra(MainActivity.OPT_KEY, 1);
+                i.putExtra(MainActivity.NOTE_KEY, noteTextView.getText().toString());
+                context.setResult(RESULT_OK, i);
+                context.finish();
+//                Bundle bundle = new Bundle();
+//                bundle.putString(MainActivity.NOTE_KEY, noteTextView.getText().toString());
+//                bundle.putInt(MainActivity.OPT_KEY, 1);
+//                mCustomListListener.displayOption(bundle);
             }
         });
 
@@ -82,6 +92,6 @@ public class CustomList extends ArrayAdapter<String> {
     }
 
     public interface CustomListListener {
-        void displayOption(int which_option, String text);
+        void displayOption(Bundle bundle);
     }
 }

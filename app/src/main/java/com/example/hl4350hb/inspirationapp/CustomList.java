@@ -3,6 +3,7 @@ package com.example.hl4350hb.inspirationapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.text.InputFilter;
@@ -53,19 +54,12 @@ public class CustomList extends ArrayAdapter<String> {
         LayoutInflater inflater = context. getLayoutInflater();
         View rowView = inflater.inflate(R.layout.list_item, null, true);
         final TextView noteTextView = (TextView) rowView.findViewById(R.id.txt);
-//        noteTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int height = noteTextView.getLayoutParams().height;
-//                if (height < 1000) {
-//                    noteTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1000)});
-//                    noteTextView.getLayoutParams().height = 500;
-//                } else {
-//                    noteTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
-//                    noteTextView.getLayoutParams().height = 50;
-//                }
-//            }
-//        });
+        noteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCustomListListener.displayOption(1, noteTextView.getText().toString());
+            }
+        });
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         noteTextView.setText(notesArray.get(position));
@@ -88,6 +82,6 @@ public class CustomList extends ArrayAdapter<String> {
     }
 
     public interface CustomListListener {
-        void displayOption(int which_option);
+        void displayOption(int which_option, String text);
     }
 }

@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
     // Key value used to maintain image during rotations.
     private static final String IMAGE_FILEPATH_KEY = "aKeyForFilepath";
 
+    protected static final String NOTE_KEY = "note key";
+    protected static final String PIC_KEY = "picture time";
+    protected static final String SRCH_KEY = "search";
+    protected static final String OPT_KEY = "which option";
+    protected static final String TEXT_KEY = "text for option";
+
 
     // Creates global references to widgets.
     Button mPicButton;
@@ -296,16 +302,12 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
     }
 
     @Override
-    public void displayOption(int which_option) {
-        switch (which_option) {
-            case 1:
-                // TODO display note to edit
-            case 2:
-                // TODO display image full screen
-            case 3:
-                // TODO display search widgets
-            default:
-                // TODO something
+    public void displayOption(int which_option, String text) {
+        Intent intent = new Intent(this, DisplayActivity.class);
+        intent.putExtra(OPT_KEY, which_option);
+        intent.putExtra(TEXT_KEY, text);
+        if (intent != null) {
+            startActivity(intent);
         }
     }
 }

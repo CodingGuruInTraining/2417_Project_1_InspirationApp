@@ -135,13 +135,15 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 //        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
 //
 //        mListView.setAdapter(adapter);
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//// TODO change to an event or something
-//                Toast.makeText(MainActivity.this, "You Clicked " + notesArray.get(+ position), Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+// TODO change to an event or something
+                String query = dbManager.findNote((int)id);
+                notifyNoteChanged((int)id, query, 1);
+                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Forces widgets to stay where they are when the keyboard appears.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
@@ -364,4 +366,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // date format - http://www.java2s.com/Tutorial/Java/0120__Development/Convertstringdatetolongvalue.htm
     // limiting character limit - https://stackoverflow.com/questions/9149846/can-i-limit-textviews-number-of-characters
     // viewing database content in debugger - https://stackoverflow.com/questions/4235996/viewing-an-android-database-cursor
+    // single row query - https://stackoverflow.com/questions/12473194/get-a-single-row-from-table
 

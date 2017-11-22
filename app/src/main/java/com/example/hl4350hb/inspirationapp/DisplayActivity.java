@@ -41,6 +41,7 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.displayer);
 
+
         mDisplayNoteEntry = (EditText) findViewById(R.id.display_noteEntry);
         mDisplayNewPicture = (ImageView) findViewById(R.id.display_newPicture);
         mDisplaySearchField = (EditText) findViewById(R.id.display_searchField);
@@ -61,6 +62,7 @@ public class DisplayActivity extends AppCompatActivity {
                 returnIntent(bundle);
             }
         });
+        mDisplaySearchButton.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         int whichOption = intent.getIntExtra(MainActivity.OPT_KEY, 0);
@@ -77,35 +79,39 @@ public class DisplayActivity extends AppCompatActivity {
 //        int whichOption = bundle.getInt(MainActivity.OPT_KEY,0);
 //        String text = bundle.getString(MainActivity.TEXT_KEY);
         whichOption = which;
+//        hideWidgets();
         switch (which) {
             case 1:
                 mDisplayNoteEntry.setVisibility(View.VISIBLE);
                 mDisplayNoteEntry.setText(text);
                 currRowId = rowId;
+                break;
             case 2:
                 mDisplayNewPicture.setVisibility(View.VISIBLE);
                 mDisplayNewPicture.setImageURI(Uri.fromFile(new File(text)));
+                break;
             case 3:
                 mDisplaySearchField.setVisibility(View.VISIBLE);
                 mDisplaySearchButton.setVisibility(View.VISIBLE);
                 mDisplayTable.setVisibility(View.VISIBLE);
+                break;
             default:
-
+                break;
         }
     }
 
     private boolean hideOption() {
         switch (whichOption) {
             case 1:
-                mDisplayNoteEntry.setVisibility(View.INVISIBLE);
+                mDisplayNoteEntry.setVisibility(View.GONE);
                 return true;
             case 2:
-                mDisplayNewPicture.setVisibility(View.INVISIBLE);
+                mDisplayNewPicture.setVisibility(View.GONE);
                 break;
             case 3:
-                mDisplaySearchField.setVisibility(View.INVISIBLE);
-                mDisplaySearchButton.setVisibility(View.INVISIBLE);
-                mDisplayTable.setVisibility(View.INVISIBLE);
+                mDisplaySearchField.setVisibility(View.GONE);
+                mDisplaySearchButton.setVisibility(View.GONE);
+                mDisplayTable.setVisibility(View.GONE);
             default:
 
         }
@@ -117,6 +123,17 @@ public class DisplayActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_FROM_DISPLAYER, bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void hideWidgets() {
+        mDisplayNoteEntry.setVisibility(View.GONE);
+
+
+        mDisplayNewPicture.setVisibility(View.GONE);
+
+        mDisplaySearchField.setVisibility(View.GONE);
+        mDisplaySearchButton.setVisibility(View.GONE);
+        mDisplayTable.setVisibility(View.GONE);
     }
 
 //    interface DisplayScreenListener {

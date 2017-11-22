@@ -51,7 +51,7 @@ public class NoteCursorAdapter extends CursorAdapter {
         ImageView img = (ImageView) view.findViewById(R.id.img);
 
 
-        String note = cursor.getString(NOTE_COL);
+        final String note = cursor.getString(NOTE_COL);
         notetxt.setText(note);
         final String imageid = cursor.getString(IMG_COL);
         img.setImageURI(Uri.fromFile(new File(imageid)));
@@ -63,7 +63,7 @@ public class NoteCursorAdapter extends CursorAdapter {
         notetxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                noteChangedListener.notifyNoteChanged(rowId, this.toString(), 1);
+                noteChangedListener.notifyNoteChanged(rowId, note, 1);
             }
         });
 

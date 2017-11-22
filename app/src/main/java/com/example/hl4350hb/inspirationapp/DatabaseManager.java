@@ -69,6 +69,24 @@ public class DatabaseManager {
         return false;
     }
 
+    public String findNote(int rowId) {
+        ContentValues queryNote = new ContentValues();
+        Cursor cursor = null;
+        String result;
+        String where = ID_COL + " = ? ";
+        String[] whereArgs = {Integer.toString(rowId)};
+        try {
+            cursor = db.query(DB_TABLE, null, where, whereArgs, null, null, null);
+
+            cursor.moveToFirst();
+            int noteCol = cursor.getColumnIndex(NOTE_COL);
+            result = cursor.getString(noteCol);
+        } finally {
+            cursor.close();
+        }
+        return result;
+    }
+
 
     public class SQLHelper extends SQLiteOpenHelper {
         public SQLHelper(Context c) {

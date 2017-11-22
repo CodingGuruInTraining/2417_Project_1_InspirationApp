@@ -30,7 +30,7 @@
         android:layout_below="@id/display_searchField"
         android:text="Search"
         android:id="@+id/display_searchButton"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <ListView
         android:layout_width="match_parent"

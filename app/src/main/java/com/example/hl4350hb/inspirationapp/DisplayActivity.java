@@ -34,17 +34,25 @@ public class DisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.displayer);
 
-        Intent intent = getIntent();
-        int whichOption = intent.getIntExtra(MainActivity.OPT_KEY, 0);
-        String text = intent.getStringExtra(MainActivity.TEXT_KEY);
+        mDisplayNoteEntry = (EditText) findViewById(R.id.display_noteEntry);
+        mDisplayNewPicture = (ImageView) findViewById(R.id.display_newPicture);
+        mDisplaySearchField = (EditText) findViewById(R.id.display_searchField);
+        mDisplaySearchButton = (Button) findViewById(R.id.display_searchButton);
+        mDisplayTable = (TableLayout) findViewById(R.id.display_table);
 
-        displayOption(whichOption, text);
+//        Intent intent = getIntent();
+//        int whichOption = intent.getIntExtra(MainActivity.OPT_KEY, 0);
+//        String text = intent.getStringExtra(MainActivity.TEXT_KEY);
+//
+//        displayOption(whichOption, text);
     }
 
 
 
 
-    private void displayOption(int whichOption, String text) {
+    private void displayOption(Bundle bundle) {
+        int whichOption = bundle.getInt(MainActivity.OPT_KEY,0);
+        String text = bundle.getString(MainActivity.TEXT_KEY);
         switch (whichOption) {
             case 1:
                 mDisplayNoteEntry.setVisibility(View.VISIBLE);

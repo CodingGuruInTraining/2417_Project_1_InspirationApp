@@ -117,13 +117,13 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
         adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
 
         mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-// TODO change to an event or something
-                Toast.makeText(MainActivity.this, "You Clicked " + notesArray.get(+ position), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//// TODO change to an event or something
+//                Toast.makeText(MainActivity.this, "You Clicked " + notesArray.get(+ position), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         // Forces widgets to stay where they are when the keyboard appears.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);

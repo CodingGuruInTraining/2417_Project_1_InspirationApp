@@ -49,35 +49,48 @@ public class CustomList extends ArrayAdapter<String> {
         this.dateFormatter = new SimpleDateFormat("M-dd-yyyy hh:mm:ss");
         this.dateFormatter2 = DateFormat.getDateInstance(DateFormat.LONG);
         this.cal = Calendar.getInstance(Locale.ENGLISH);
+
+        if (context instanceof CustomListListener) {
+            mCustomListListener = (CustomListListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement listener");
+        }
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context. getLayoutInflater();
         View rowView = inflater.inflate(R.layout.list_item, null, true);
         final TextView noteTextView = (TextView) rowView.findViewById(R.id.txt);
         noteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent();
-                i.putExtra(MainActivity.OPT_KEY, 1);
-                i.putExtra(MainActivity.NOTE_KEY, noteTextView.getText().toString());
-                context.setResult(RESULT_OK, i);
-                context.finish();
+//                Intent i = new Intent();
+//                i.putExtra(MainActivity.OPT_KEY, 1);
+//                i.putExtra(MainActivity.NOTE_KEY, noteTextView.getText().toString());
+//                context.setResult(RESULT_OK, i);
+//                context.finish();
 //                Bundle bundle = new Bundle();
 //                bundle.putString(MainActivity.NOTE_KEY, noteTextView.getText().toString());
 //                bundle.putInt(MainActivity.OPT_KEY, 1);
 //                mCustomListListener.displayOption(bundle);
+                sendData(noteTextView.getText().toString(), 1);
             }
         });
+        noteTextView.setText(notesArray.get(position));
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-        noteTextView.setText(notesArray.get(position));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendData(imageIdArray.get(position), 2);
+            }
+        });
+        imageView.setImageURI(Uri.fromFile(new File(imageIdArray.get(position))));
 
         TextView dateTextView = (TextView) rowView.findViewById(R.id.datetxt);
         dateTextView.setText(dateFormatter.format(dateArray.get(position)));
 
-        imageView.setImageURI(Uri.fromFile(new File(imageIdArray.get(position))));
 //        imageView.setImageResource(imageIdArray.get(position));
         return rowView;
     }
@@ -93,5 +106,12 @@ public class CustomList extends ArrayAdapter<String> {
 
     public interface CustomListListener {
         void displayOption(Bundle bundle);
+    }
+
+    private void sendData(String text, int choice) {
+        Bundle bundle = new Bundle();
+        bundle.putString(MainActivity.TEXT_KEY, text);
+        bundle.putInt(MainActivity.OPT_KEY, choice);
+        mCustomListListener.displayOption(bundle);
     }
 }

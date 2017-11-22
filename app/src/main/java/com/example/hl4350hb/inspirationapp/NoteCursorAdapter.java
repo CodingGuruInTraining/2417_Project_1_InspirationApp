@@ -46,9 +46,16 @@ public class NoteCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, final Cursor cursor) {
-        TextView notetxt = (TextView) view.findViewById(R.id.txt);
+        final TextView notetxt = (TextView) view.findViewById(R.id.txt);
         TextView datetxt = (TextView) view.findViewById(R.id.datetxt);
         ImageView img = (ImageView) view.findViewById(R.id.img);
+
+        notetxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noteChangedListener.notifyNoteChanged(cursor.getPosition(), notetxt.getText().toString());
+            }
+        });
 
         String note = cursor.getString(NOTE_COL);
         notetxt.setText(note);

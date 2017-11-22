@@ -31,6 +31,7 @@ public class DatabaseManager {
         this.context = c;
         helper = new SQLHelper(c);
         this.db = helper.getWritableDatabase();
+//        this.db.delete(DB_TABLE, null, null);
     }
 
     public void close() {
@@ -42,7 +43,7 @@ public class DatabaseManager {
         return cursor;
     }
 
-    public boolean addMovie(String note, String imageid, long date) {
+    public boolean addNote(String note, String imageid, long date) {
         ContentValues newProduct = new ContentValues();
         newProduct.put(NOTE_COL, note);
         newProduct.put(IMG_COL, imageid);
@@ -55,12 +56,12 @@ public class DatabaseManager {
         }
     }
 
-    public boolean updateNote(int picID, String newNote) {
+    public boolean updateNote(int rowID, String newNote) {
         ContentValues changeNote = new ContentValues();
         changeNote.put(NOTE_COL, newNote);
 
         String where = ID_COL + " = ? ";
-        String[] whereArgs = {Integer.toString(picID)};
+        String[] whereArgs = {Integer.toString(rowID)};
         int rowsMod = db.update(DB_TABLE, changeNote, where, whereArgs);
         if (rowsMod == 1) {
             return true;
@@ -76,7 +77,7 @@ public class DatabaseManager {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            String createSQLbase = "CREAT TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s INTEGER UNIQUE )";
+            String createSQLbase = "CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s INTEGER UNIQUE )";
             String createSQL = String.format(createSQLbase, DB_TABLE, ID_COL, NOTE_COL, IMG_COL, DATE_COL);
             db.execSQL(createSQL);
         }

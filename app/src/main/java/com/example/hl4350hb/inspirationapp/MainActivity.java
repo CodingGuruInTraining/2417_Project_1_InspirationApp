@@ -3,6 +3,8 @@ package com.example.hl4350hb.inspirationapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,7 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements CustomList.CustomListListener {
+public class MainActivity extends AppCompatActivity implements NoteCursorAdapter.NoteChangedListener {
 //     ############################################################
 
 //       ##################     GLOBALS     ######################
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
     protected static final String SRCH_KEY = "search";
     protected static final String OPT_KEY = "which option";
     protected static final String TEXT_KEY = "text for option";
+    protected static final String ID_KEY = "everyone has an id";
 
 
     // Creates global references to widgets.
@@ -61,13 +64,16 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
     // Identifier code for returning results.
     private static final int SAVE_IMAGE_PERMISSION_REQUEST_CODE = 1001;
 
+    private static final int DISPLAYER_REQUEST_CODE = 202;
+
 
     // Will contain the location of the file on device.
     private String mImagePath;
     // Holds the image in variable.
     private Bitmap mImage;
 
-
+    DatabaseManager dbManager;
+    NoteCursorAdapter cursorListAdapter;
 
     protected CustomList adapter;
     private long currTime;
@@ -96,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
             mImagePath = savedInstanceState.getString(IMAGE_FILEPATH_KEY);
         }
 
+        dbManager = new DatabaseManager(this);
+
         // Defines widget variables for global use.
         mPicButton = (Button) findViewById(R.id.picButton);
         mNewPicture = (ImageView) findViewById(R.id.newPicture);
@@ -113,10 +121,20 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
 
 
         mListView = (ListView) findViewById(R.id.picList);
-// TODO retrieve ArrayLists from database and then pass to CustomList here
-        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
 
-        mListView.setAdapter(adapter);
+
+
+        Cursor cursor = dbManager.getAllPics();
+        String data = DatabaseUtils.dumpCursorToString(cursor);
+        cursorListAdapter = new NoteCursorAdapter(this, cursor, true);
+        mListView.setAdapter(cursorListAdapter);
+
+
+
+// TODO retrieve ArrayLists from database and then pass to CustomList here
+//        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
+//
+//        mListView.setAdapter(adapter);
 //        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -137,7 +155,9 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
 
 
                     String newNote = mNoteEntry.getText().toString();
-                    adapter.addNewEntry(newNote, mImagePath, currTime);
+                    dbManager.addNote(newNote, mImagePath, currTime);
+                    cursorListAdapter.changeCursor(dbManager.getAllPics());
+//                    adapter.addNewEntry(newNote, mImagePath, currTime);
                     mNoteEntry.getText().clear();
                     mNoteEntry.setVisibility(View.GONE);
 
@@ -164,8 +184,19 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == CAMERA_ACCESS_REQUEST_CODE) {
-            saveImage();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAMERA_ACCESS_REQUEST_CODE) {
+                saveImage();
+            }
+            else if (requestCode == DISPLAYER_REQUEST_CODE) {
+                Bundle bundle = data.getBundleExtra(DisplayActivity.EXTRA_FROM_DISPLAYER);
+                if (bundle.containsKey(NOTE_KEY) && bundle.containsKey(ID_KEY)) {
+                    int rowId = bundle.getInt(ID_KEY, 0);
+                    String newNote = bundle.getString(NOTE_KEY);
+                    dbManager.updateNote(rowId, newNote);
+                    cursorListAdapter.changeCursor(dbManager.getAllPics());
+                }
+            }
         }
     }
 
@@ -238,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
                 // Save the image's location to be used later.
                 mImagePath = imageFile.getAbsolutePath();
 
-                Log.d(TAG, "the image id is " + R.drawable.image2);
                 // Defines the image location and how to access it for the camera.
                 imageFileUri = FileProvider.getUriForFile(MainActivity.this, "com.example.hl4350hb.inspirationapp", imageFile);
             } catch (IOException err) {
@@ -312,8 +342,12 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
 //    }
 
     @Override
-    public void displayOption(Bundle bundle) {
-        //
+    public void notifyNoteChanged(int rowId, String text, int which) {
+        Intent intent = new Intent(this, DisplayActivity.class);
+        intent.putExtra(ID_KEY, rowId);
+        intent.putExtra(TEXT_KEY, text);
+        intent.putExtra(OPT_KEY, which);
+        startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
     }
 }
 
@@ -329,4 +363,5 @@ public class MainActivity extends AppCompatActivity implements CustomList.Custom
     // "hiding" imageview - https://stackoverflow.com/questions/2859212/how-to-clear-an-imageview-in-android
     // date format - http://www.java2s.com/Tutorial/Java/0120__Development/Convertstringdatetolongvalue.htm
     // limiting character limit - https://stackoverflow.com/questions/9149846/can-i-limit-textviews-number-of-characters
+    // viewing database content in debugger - https://stackoverflow.com/questions/4235996/viewing-an-android-database-cursor
 

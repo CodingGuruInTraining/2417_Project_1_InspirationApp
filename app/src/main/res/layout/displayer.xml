@@ -6,14 +6,14 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/display_noteEntry"
         android:inputType="textMultiLine"
         android:visibility="invisible"/>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/display_newPicture"
         android:visibility="invisible"/>
 
@@ -32,14 +32,23 @@
         android:id="@+id/display_searchButton"
         android:visibility="invisible"/>
 
-    <TableLayout
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/display_searchButton"
         android:id="@+id/display_table"
         android:visibility="invisible">
 
-    </TableLayout>
+    </ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/display_table"
+        android:layout_gravity="bottom"
+        android:id="@+id/submit_button"
+        android:text="Finish"
+        />
 
 
 </RelativeLayout>

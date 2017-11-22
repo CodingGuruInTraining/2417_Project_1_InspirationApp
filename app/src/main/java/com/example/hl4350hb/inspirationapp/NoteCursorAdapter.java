@@ -46,28 +46,37 @@ public class NoteCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, final Cursor cursor) {
-        final TextView notetxt = (TextView) view.findViewById(R.id.txt);
+        TextView notetxt = (TextView) view.findViewById(R.id.txt);
         TextView datetxt = (TextView) view.findViewById(R.id.datetxt);
         ImageView img = (ImageView) view.findViewById(R.id.img);
 
-        notetxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                noteChangedListener.notifyNoteChanged(cursor.getPosition(), notetxt.getText().toString());
-            }
-        });
 
         String note = cursor.getString(NOTE_COL);
         notetxt.setText(note);
-        String imageid = cursor.getString(IMG_COL);
+        final String imageid = cursor.getString(IMG_COL);
         img.setImageURI(Uri.fromFile(new File(imageid)));
         long datetaken = cursor.getLong(DATE_COL);
         datetxt.setText(dateFormatter.format(datetaken));
 
+        final int rowId = cursor.getInt(ID_COL);
+
+        notetxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noteChangedListener.notifyNoteChanged(rowId, this.toString(), 1);
+            }
+        });
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noteChangedListener.notifyNoteChanged(rowId, imageid, 2);
+            }
+        });
     }
 
 
     interface NoteChangedListener {
-        void notifyNoteChanged(int picID, String newNote);
+        void notifyNoteChanged(int rowId, String text, int which);
     }
 }

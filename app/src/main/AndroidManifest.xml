@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DisplayActivity">
 
+        </activity>
         <!--Change the android:authorities to the package of code.-->
         <!--It should match the 2nd argument in the call to fileProvider.getUriForFile.-->
         <provider

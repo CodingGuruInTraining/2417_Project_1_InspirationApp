@@ -367,4 +367,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // limiting character limit - https://stackoverflow.com/questions/9149846/can-i-limit-textviews-number-of-characters
     // viewing database content in debugger - https://stackoverflow.com/questions/4235996/viewing-an-android-database-cursor
     // single row query - https://stackoverflow.com/questions/12473194/get-a-single-row-from-table
+    // custom auto-scale ImageView - https://www.ryadel.com/en/android-proportionally-stretch-imageview-fit-whole-screen-width-maintaining-aspect-ratio/
 

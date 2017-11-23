@@ -9,19 +9,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/display_noteEntry"
         android:inputType="textMultiLine"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <com.example.hl4350hb.inspirationapp.ScaleImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/display_newPicture"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:adjustViewBounds="true"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/display_searchField"
         android:hint="Search..."/>
 
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/display_searchButton"
         android:id="@+id/display_table"
-        android:visibility="invisible">
+        android:visibility="gone">
 
     </ListView>
 
@@ -49,6 +49,8 @@
         android:layout_gravity="bottom"
         android:id="@+id/submit_button"
         android:text="Finish"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         />
 
 

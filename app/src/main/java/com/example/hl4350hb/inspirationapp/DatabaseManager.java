@@ -39,7 +39,7 @@ public class DatabaseManager {
     }
 
     public Cursor getAllPics() {
-        Cursor cursor = db.query(DB_TABLE, null, null, null, null, null, DATE_COL);
+        Cursor cursor = db.query(DB_TABLE, null, null, null, null, null, DATE_COL + " DESC");
         return cursor;
     }
 

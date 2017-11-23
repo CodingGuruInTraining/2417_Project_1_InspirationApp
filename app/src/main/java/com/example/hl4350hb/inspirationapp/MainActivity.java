@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mPicButton = (Button) findViewById(R.id.picButton);
         mNewPicture = (ImageView) findViewById(R.id.newPicture);
         mNoteEntry = (EditText) findViewById(R.id.noteEntry);
+        mListView = (ListView) findViewById(R.id.picList);
 
         // Defines click event for button.
         mPicButton.setOnClickListener(new View.OnClickListener() {
@@ -119,11 +120,6 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 
 
 
-
-        mListView = (ListView) findViewById(R.id.picList);
-
-
-
         Cursor cursor = dbManager.getAllPics();
         String data = DatabaseUtils.dumpCursorToString(cursor);
         cursorListAdapter = new NoteCursorAdapter(this, cursor, true);
@@ -131,17 +127,14 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 
 
 
-// TODO retrieve ArrayLists from database and then pass to CustomList here
-//        adapter = new CustomList(MainActivity.this, notesArray, imageIdArray, dateArray);
-//
-//        mListView.setAdapter(adapter);
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 // TODO change to an event or something
                 String query = dbManager.findNote((int)id);
                 notifyNoteChanged((int)id, query, 1);
-                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -155,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
-
                     String newNote = mNoteEntry.getText().toString();
                     dbManager.addNote(newNote, mImagePath, currTime);
                     cursorListAdapter.changeCursor(dbManager.getAllPics());
@@ -164,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                     mNoteEntry.setVisibility(View.GONE);
 
                     mNewPicture.setImageResource(android.R.color.transparent);
-// TODO add to database here someday
+
                     Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -212,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             mNewPicture.setImageBitmap(mImage);
 
             mNoteEntry.setVisibility(View.VISIBLE);
-
+            mNoteEntry.requestFocus();
         }
     }
 
@@ -368,4 +360,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // viewing database content in debugger - https://stackoverflow.com/questions/4235996/viewing-an-android-database-cursor
     // single row query - https://stackoverflow.com/questions/12473194/get-a-single-row-from-table
     // custom auto-scale ImageView - https://www.ryadel.com/en/android-proportionally-stretch-imageview-fit-whole-screen-width-maintaining-aspect-ratio/
+    // align widget on bottom - https://stackoverflow.com/questions/25159572/how-to-display-widget-at-bottom-of-screen-android
 

@@ -357,8 +357,8 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 dialog.setTitle("Search Through Pictures");
 
                 final EditText searchText = (EditText) dialog.findViewById(R.id.dialog_edittext);
-                RadioButton noteRadio = (RadioButton) dialog.findViewById(R.id.dialog_notes_radio);
-                RadioButton hashRadio = (RadioButton) dialog.findViewById(R.id.dialog_hash_radio);
+                final RadioButton noteRadio = (RadioButton) dialog.findViewById(R.id.dialog_notes_radio);
+                final RadioButton hashRadio = (RadioButton) dialog.findViewById(R.id.dialog_hash_radio);
                 Button okButton = (Button) dialog.findViewById(R.id.dialog_search_button);
                 Button cancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
 
@@ -366,8 +366,9 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                     @Override
                     public void onClick(View view) {
                         String search = searchText.getText().toString();
-                        if (!search.equals("")) {
+                        if (!search.equals("") && (noteRadio.isChecked() || hashRadio.isChecked())) {
                             // TODO query database
+
                         }
                     }
                 });

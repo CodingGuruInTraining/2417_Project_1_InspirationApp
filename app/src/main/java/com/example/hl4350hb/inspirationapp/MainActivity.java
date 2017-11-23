@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     ImageView mNewPicture;
     ListView mListView;
     EditText mNoteEntry;
+    EditText mHashtagEntry;
 
 
     // Identifier code for the camera returning a result.
@@ -109,12 +110,15 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mNewPicture = (ImageView) findViewById(R.id.newPicture);
         mNoteEntry = (EditText) findViewById(R.id.noteEntry);
         mListView = (ListView) findViewById(R.id.picList);
+        mHashtagEntry = (EditText) findViewById(R.id.hashTagEntry);
 
         // Defines click event for button.
         mPicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePhoto();
+                mListView.setVisibility(View.GONE);
+
             }
         });
 
@@ -131,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-// TODO change to an event or something
                 String query = dbManager.findNote((int)id);
                 notifyNoteChanged((int)id, query, 1);
 //                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 
         mNoteEntry.setFocusableInTouchMode(true);
         mNoteEntry.requestFocus();
+        // TODO replace listener with a submit button
         mNoteEntry.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -154,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 //                    adapter.addNewEntry(newNote, mImagePath, currTime);
                     mNoteEntry.getText().clear();
                     mNoteEntry.setVisibility(View.GONE);
+                    mHashtagEntry.getText().clear();
+                    mHashtagEntry.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
 
                     mNewPicture.setImageResource(android.R.color.transparent);
 
@@ -202,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         if (hasFocus && mImagePath != null) {
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
-
+            mHashtagEntry.setVisibility(View.VISIBLE);
             mNoteEntry.setVisibility(View.VISIBLE);
             mNoteEntry.requestFocus();
         }

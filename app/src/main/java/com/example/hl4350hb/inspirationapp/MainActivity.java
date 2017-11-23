@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     protected static final String OPT_KEY = "which option";
     protected static final String TEXT_KEY = "text for option";
     protected static final String ID_KEY = "everyone has an id";
+    protected static final String HASH_KEY = "hashtag selfie";
 
 
     // Creates global references to widgets.
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
             mHashtagEntry.setVisibility(View.VISIBLE);
+            mSaveButton.setVisibility(View.VISIBLE);
             mNoteEntry.setVisibility(View.VISIBLE);
             mNoteEntry.requestFocus();
         }
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 // Save image
                 MediaStore.Images.Media.insertImage(getContentResolver(), mImage, "InspirationApp", "Photo take by InspirationApp");
             } else {
-                Toast.makeText(this, "All pictures will saved..NOT!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "All pictures will be saved..NOT!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -305,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             public void onClick(View view) {
                 takePhoto();
                 mListView.setVisibility(View.GONE);
-
             }
         });
 
@@ -325,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 String hashtags = mHashtagEntry.getText().toString();
 // TODO update database with hashtag entries
                 // Add picture and its accompanying data to database.
-                dbManager.addNote(newNote, mImagePath, currTime);
+                dbManager.addNote(newNote, mImagePath, currTime, hashtags);
                 // Refreshes ListView with new full database list.
                 cursorListAdapter.changeCursor(dbManager.getAllPics());
 
@@ -336,24 +337,13 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 mHashtagEntry.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
                 mNewPicture.setImageResource(android.R.color.transparent);
+                mSaveButton.setVisibility(View.GONE);
 
                 // Displays message letting user know their picture was saved.
                 Toast.makeText(MainActivity.this, "Pic saved!", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-//    @Override
-//    public void displayOption(int which_option, String text) {
-//        Intent intent = new Intent(this, DisplayActivity.class);
-//        intent.putExtra(OPT_KEY, which_option);
-//        intent.putExtra(TEXT_KEY, text);
-//        if (intent != null) {
-//            startActivity(intent);
-//        }
-//    }
-
-
 }
 
 

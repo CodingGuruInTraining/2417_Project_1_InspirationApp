@@ -76,10 +76,9 @@ public class DisplayActivity extends AppCompatActivity {
 
 
     private void displayOption(int rowId, String text, int which) {
-//        int whichOption = bundle.getInt(MainActivity.OPT_KEY,0);
-//        String text = bundle.getString(MainActivity.TEXT_KEY);
+
         whichOption = which;
-//        hideWidgets();
+
         switch (which) {
             case 1:
                 mDisplayNoteEntry.setVisibility(View.VISIBLE);
@@ -127,10 +126,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     private void hideWidgets() {
         mDisplayNoteEntry.setVisibility(View.GONE);
-
-
         mDisplayNewPicture.setVisibility(View.GONE);
-
         mDisplaySearchField.setVisibility(View.GONE);
         mDisplaySearchButton.setVisibility(View.GONE);
         mDisplayTable.setVisibility(View.GONE);

@@ -25,6 +25,7 @@ public class NoteCursorAdapter extends CursorAdapter {
     private static final int NOTE_COL = 1;
     private static final int IMG_COL = 2;
     private static final int DATE_COL = 3;
+    private static final int HASH_COL = 4;
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("M-dd-yyyy hh:mm:ss");
 
     public NoteCursorAdapter(Context context, Cursor c, boolean autoRequery) {

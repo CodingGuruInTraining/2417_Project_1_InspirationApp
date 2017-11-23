@@ -18,12 +18,13 @@ public class DatabaseManager {
     private SQLiteDatabase db;
 
     protected static final String DB_NAME = "inspires";
-    protected static final int DB_VERSION = 2;
+    protected static final int DB_VERSION = 3;
     protected static final String DB_TABLE = "inspirepics";
     protected static final String ID_COL = "_id";
     protected static final String NOTE_COL = "notes";
     protected static final String IMG_COL = "imageid";
     protected static final String DATE_COL = "datetaken";
+    protected static final String HASH_COL = "hashtags";
 
 
 
@@ -39,15 +40,16 @@ public class DatabaseManager {
     }
 
     public Cursor getAllPics() {
-        Cursor cursor = db.query(DB_TABLE, null, null, null, null, null, DATE_COL + " DESC");
-        return cursor;
+        // Queries database for all entries and sorts them with newest entry first.
+        return db.query(DB_TABLE, null, null, null, null, null, DATE_COL + " DESC");
     }
 
-    public boolean addNote(String note, String imageid, long date) {
+    public boolean addNote(String note, String imageid, long date, String hashtags) {
         ContentValues newProduct = new ContentValues();
         newProduct.put(NOTE_COL, note);
         newProduct.put(IMG_COL, imageid);
         newProduct.put(DATE_COL, date);
+        newProduct.put(HASH_COL, hashtags);
         try {
             db.insertOrThrow(DB_TABLE, null, newProduct);
             return true;
@@ -70,7 +72,7 @@ public class DatabaseManager {
     }
 
     public String findNote(int rowId) {
-        ContentValues queryNote = new ContentValues();
+//        ContentValues queryNote = new ContentValues();
         Cursor cursor = null;
         String result;
         String where = ID_COL + " = ? ";
@@ -95,8 +97,8 @@ public class DatabaseManager {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            String createSQLbase = "CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s INTEGER UNIQUE )";
-            String createSQL = String.format(createSQLbase, DB_TABLE, ID_COL, NOTE_COL, IMG_COL, DATE_COL);
+            String createSQLbase = "CREATE TABLE %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s INTEGER UNIQUE, %s TEXT )";
+            String createSQL = String.format(createSQLbase, DB_TABLE, ID_COL, NOTE_COL, IMG_COL, DATE_COL, HASH_COL);
             db.execSQL(createSQL);
         }
 

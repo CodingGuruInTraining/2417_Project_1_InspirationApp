@@ -1,6 +1,7 @@
 package com.example.hl4350hb.inspirationapp;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     EditText mNoteEntry;
     EditText mHashtagEntry;
     Button mSaveButton;
+    Button mSearchButton;
 
 
     // Identifier code for the camera returning a result.
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mListView = (ListView) findViewById(R.id.picList);
         mHashtagEntry = (EditText) findViewById(R.id.hashTagEntry);
         mSaveButton = (Button) findViewById(R.id.save_button);
+        mSearchButton = (Button) findViewById(R.id.search_route_button);
 
         // Creates database and its components.
         dbManager = new DatabaseManager(this);
@@ -324,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 // Retrieves input values.
                 String newNote = mNoteEntry.getText().toString();
                 String hashtags = mHashtagEntry.getText().toString();
-// TODO update database with hashtag entries
+
                 // Add picture and its accompanying data to database.
                 dbManager.addNote(newNote, mImagePath, currTime, hashtags);
                 // Refreshes ListView with new full database list.
@@ -341,6 +345,41 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 
                 // Displays message letting user know their picture was saved.
                 Toast.makeText(MainActivity.this, "Pic saved!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(MainActivity.this);
+
+                dialog.setContentView(R.layout.dialog_search);
+                dialog.setTitle("Search Through Pictures");
+
+                final EditText searchText = (EditText) dialog.findViewById(R.id.dialog_edittext);
+                RadioButton noteRadio = (RadioButton) dialog.findViewById(R.id.dialog_notes_radio);
+                RadioButton hashRadio = (RadioButton) dialog.findViewById(R.id.dialog_hash_radio);
+                Button okButton = (Button) dialog.findViewById(R.id.dialog_search_button);
+                Button cancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String search = searchText.getText().toString();
+                        if (!search.equals("")) {
+                            // TODO query database
+                        }
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
     }

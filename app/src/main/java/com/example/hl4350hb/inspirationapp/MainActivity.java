@@ -58,13 +58,14 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     ListView mListView;
     EditText mNoteEntry;
     EditText mHashtagEntry;
+    Button mSaveButton;
 
 
     // Identifier code for the camera returning a result.
     private static final int CAMERA_ACCESS_REQUEST_CODE = 0;
     // Identifier code for returning results.
     private static final int SAVE_IMAGE_PERMISSION_REQUEST_CODE = 1001;
-
+    // Identifier code for returning from DisplayActivity.
     private static final int DISPLAYER_REQUEST_CODE = 202;
 
 
@@ -73,18 +74,15 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // Holds the image in variable.
     private Bitmap mImage;
 
+    // Database variable global holders.
     DatabaseManager dbManager;
     NoteCursorAdapter cursorListAdapter;
 
-    protected CustomList adapter;
+    // Variable to hold the current time stamp while naming and
+    // saving new pictures.
     private long currTime;
 
 
-    // Will contain the notes for each picture.
-    ArrayList<String> notesArray = new ArrayList<String>();
-    // Will contain the image ID for each picture.
-    ArrayList<String> imageIdArray = new ArrayList<String>();
-    ArrayList<Long> dateArray = new ArrayList<Long>();
 
 
 
@@ -103,74 +101,34 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             mImagePath = savedInstanceState.getString(IMAGE_FILEPATH_KEY);
         }
 
-        dbManager = new DatabaseManager(this);
-
         // Defines widget variables for global use.
         mPicButton = (Button) findViewById(R.id.picButton);
         mNewPicture = (ImageView) findViewById(R.id.newPicture);
         mNoteEntry = (EditText) findViewById(R.id.noteEntry);
         mListView = (ListView) findViewById(R.id.picList);
         mHashtagEntry = (EditText) findViewById(R.id.hashTagEntry);
+        mSaveButton = (Button) findViewById(R.id.save_button);
 
-        // Defines click event for button.
-        mPicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhoto();
-                mListView.setVisibility(View.GONE);
-
-            }
-        });
-
-
-
+        // Creates database and its components.
+        dbManager = new DatabaseManager(this);
         Cursor cursor = dbManager.getAllPics();
+
+        // FOR TESTING - Shows all the database entries while debugging.
         String data = DatabaseUtils.dumpCursorToString(cursor);
+
+        // Instantiates CursorAdapter and is assigned to the ListView.
         cursorListAdapter = new NoteCursorAdapter(this, cursor, true);
         mListView.setAdapter(cursorListAdapter);
 
-
-
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String query = dbManager.findNote((int)id);
-                notifyNoteChanged((int)id, query, 1);
-//                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Function to add the listeners to widgets.
+        addListeners();
 
         // Forces widgets to stay where they are when the keyboard appears.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-
+        // Puts the focus in the EditText to start typing right away.
         mNoteEntry.setFocusableInTouchMode(true);
         mNoteEntry.requestFocus();
-        // TODO replace listener with a submit button
-        mNoteEntry.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-
-                    String newNote = mNoteEntry.getText().toString();
-                    dbManager.addNote(newNote, mImagePath, currTime);
-                    cursorListAdapter.changeCursor(dbManager.getAllPics());
-//                    adapter.addNewEntry(newNote, mImagePath, currTime);
-                    mNoteEntry.getText().clear();
-                    mNoteEntry.setVisibility(View.GONE);
-                    mHashtagEntry.getText().clear();
-                    mHashtagEntry.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
-
-                    mNewPicture.setImageResource(android.R.color.transparent);
-
-                    Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                return false;
-            }
-        });
-
     }
 
 
@@ -232,6 +190,16 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 Toast.makeText(this, "All pictures will saved..NOT!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override   // Return function from CursorAdapter.
+    // Starts DisplayActivity.
+    public void notifyNoteChanged(int rowId, String text, int which) {
+        Intent intent = new Intent(this, DisplayActivity.class);
+        intent.putExtra(ID_KEY, rowId);
+        intent.putExtra(TEXT_KEY, text);
+        intent.putExtra(OPT_KEY, which);
+        startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
     }
 
 
@@ -332,6 +300,50 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         }
     }
 
+    private void addListeners() {
+        // Defines click event for button.
+        mPicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhoto();
+                mListView.setVisibility(View.GONE);
+
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String query = dbManager.findNote((int)id);
+                notifyNoteChanged((int)id, query, 1);
+//                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mNoteEntry.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    String newNote = mNoteEntry.getText().toString();
+                    dbManager.addNote(newNote, mImagePath, currTime);
+                    cursorListAdapter.changeCursor(dbManager.getAllPics());
+//                    adapter.addNewEntry(newNote, mImagePath, currTime);
+                    mNoteEntry.getText().clear();
+                    mNoteEntry.setVisibility(View.GONE);
+                    mHashtagEntry.getText().clear();
+                    mHashtagEntry.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+
+                    mNewPicture.setImageResource(android.R.color.transparent);
+
+                    Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
 //    @Override
 //    public void displayOption(int which_option, String text) {
 //        Intent intent = new Intent(this, DisplayActivity.class);
@@ -342,14 +354,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
 //        }
 //    }
 
-    @Override
-    public void notifyNoteChanged(int rowId, String text, int which) {
-        Intent intent = new Intent(this, DisplayActivity.class);
-        intent.putExtra(ID_KEY, rowId);
-        intent.putExtra(TEXT_KEY, text);
-        intent.putExtra(OPT_KEY, which);
-        startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
-    }
+
 }
 
 

@@ -282,9 +282,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         bOptions.inJustDecodeBounds = false;
         bOptions.inSampleSize = scaleFactor;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mImagePath, bOptions);
-        mImage = bitmap;
-
+        mImage = BitmapFactory.decodeFile(mImagePath, bOptions);
     }
 
 
@@ -301,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     }
 
     private void addListeners() {
-        // Defines click event for button.
+        // Defines click event for Picture button.
         mPicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -316,30 +314,31 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String query = dbManager.findNote((int)id);
                 notifyNoteChanged((int)id, query, 1);
-//                Toast.makeText(MainActivity.this, "You Clicked something", Toast.LENGTH_SHORT).show();
             }
         });
 
-        mNoteEntry.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Retrieves input values.
+                String newNote = mNoteEntry.getText().toString();
+                String hashtags = mHashtagEntry.getText().toString();
+// TODO update database with hashtag entries
+                // Add picture and its accompanying data to database.
+                dbManager.addNote(newNote, mImagePath, currTime);
+                // Refreshes ListView with new full database list.
+                cursorListAdapter.changeCursor(dbManager.getAllPics());
 
-                    String newNote = mNoteEntry.getText().toString();
-                    dbManager.addNote(newNote, mImagePath, currTime);
-                    cursorListAdapter.changeCursor(dbManager.getAllPics());
-//                    adapter.addNewEntry(newNote, mImagePath, currTime);
-                    mNoteEntry.getText().clear();
-                    mNoteEntry.setVisibility(View.GONE);
-                    mHashtagEntry.getText().clear();
-                    mHashtagEntry.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
+                // Clears EditTexts and hides/shows certain widgets.
+                mNoteEntry.getText().clear();
+                mNoteEntry.setVisibility(View.GONE);
+                mHashtagEntry.getText().clear();
+                mHashtagEntry.setVisibility(View.GONE);
+                mListView.setVisibility(View.VISIBLE);
+                mNewPicture.setImageResource(android.R.color.transparent);
 
-                    mNewPicture.setImageResource(android.R.color.transparent);
-
-                    Toast.makeText(MainActivity.this, "note saved!", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                return false;
+                // Displays message letting user know their picture was saved.
+                Toast.makeText(MainActivity.this, "Pic saved!", Toast.LENGTH_SHORT).show();
             }
         });
     }

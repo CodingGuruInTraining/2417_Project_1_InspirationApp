@@ -368,7 +368,20 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                         String search = searchText.getText().toString();
                         if (!search.equals("") && (noteRadio.isChecked() || hashRadio.isChecked())) {
                             // TODO query database
+                            int field;
+                            if (noteRadio.isChecked()) {
+                                field = 1;
+                            } else {
+                                field = 2;
+                            }
+                            ArrayList<PictureEntry> results = dbManager.findNote(search, field);
+                            Intent intent = new Intent();
+                            intent.putParcelableArrayListExtra(SRCH_KEY, results);
+                            intent.putExtra(OPT_KEY, 3);
+                            startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
 
+
+//                            dialog.dismiss();
                         }
                     }
                 });
@@ -402,4 +415,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // single row query - https://stackoverflow.com/questions/12473194/get-a-single-row-from-table
     // custom auto-scale ImageView - https://www.ryadel.com/en/android-proportionally-stretch-imageview-fit-whole-screen-width-maintaining-aspect-ratio/
     // align widget on bottom - https://stackoverflow.com/questions/25159572/how-to-display-widget-at-bottom-of-screen-android
+    // dialog box setup - https://examples.javacodegeeks.com/android/core/ui/dialog/android-custom-dialog-example/
 

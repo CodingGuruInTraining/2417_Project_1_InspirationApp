@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,6 +34,7 @@ public class DisplayActivity extends AppCompatActivity {
 
     private int whichOption;
     private int currRowId;
+    private ArrayList<PictureEntry> results = new ArrayList<PictureEntry>();
 
 //    DisplayScreenListener mDisplayScreenListener;
 
@@ -66,6 +68,9 @@ public class DisplayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int whichOption = intent.getIntExtra(MainActivity.OPT_KEY, 0);
+        if (whichOption == 3) {
+            results = intent.getParcelableArrayListExtra(MainActivity.SRCH_KEY);
+        }
         String text = intent.getStringExtra(MainActivity.TEXT_KEY);
         int rowId = intent.getIntExtra(MainActivity.ID_KEY, 0);
 

@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  *
  */
@@ -87,6 +89,37 @@ public class DatabaseManager {
             cursor.close();
         }
         return result;
+    }
+
+    public ArrayList<PictureEntry> findNote(String search, int field) {
+        String where = "";
+        String[] whereArgs = {"%" + search + "%"};
+
+        switch (field) {
+            case 1:
+                where = NOTE_COL + " LIKE ? ";
+                break;
+            case 2:
+                where = HASH_COL + " LIKE ? ";
+                break;
+        }
+        Cursor cursor = db.query(DB_TABLE, null, where, whereArgs, null, null, null);
+        if (cursor.getCount() > 0) {
+            ArrayList<PictureEntry> results = new ArrayList<PictureEntry>();
+            int noteCol = cursor.getColumnIndex(NOTE_COL);
+            int imgCol = cursor.getColumnIndex(IMG_COL);
+            int dateCol = cursor.getColumnIndex(DATE_COL);
+            int hashCol = cursor.getColumnIndex(HASH_COL);
+            while (cursor.moveToNext()) {
+                String note = cursor.getString(noteCol);
+                String img = cursor.getString(imgCol);
+                long date = cursor.getLong(dateCol);
+                String hash = cursor.getString(hashCol);
+                results.add(new PictureEntry(note, img, date, hash));
+            }
+            return results;
+        }
+        return null;
     }
 
 

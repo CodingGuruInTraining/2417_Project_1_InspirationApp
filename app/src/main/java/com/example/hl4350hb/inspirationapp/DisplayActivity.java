@@ -24,8 +24,8 @@ public class DisplayActivity extends AppCompatActivity {
     // Variables for widgets.
     EditText mDisplayNoteEntry;
     ImageView mDisplayNewPicture;
-    EditText mDisplaySearchField;
-    Button mDisplaySearchButton;
+//    EditText mDisplaySearchField;
+//    Button mDisplaySearchButton;
     ListView mDisplayTable;
     Button mSubmitButton;
 
@@ -35,6 +35,7 @@ public class DisplayActivity extends AppCompatActivity {
     private int whichOption;
     private int currRowId;
     private ArrayList<PictureEntry> results = new ArrayList<PictureEntry>();
+    private SearchArrayAdapter listAdapter;
 
 //    DisplayScreenListener mDisplayScreenListener;
 
@@ -46,8 +47,8 @@ public class DisplayActivity extends AppCompatActivity {
 
         mDisplayNoteEntry = (EditText) findViewById(R.id.display_noteEntry);
         mDisplayNewPicture = (ImageView) findViewById(R.id.display_newPicture);
-        mDisplaySearchField = (EditText) findViewById(R.id.display_searchField);
-        mDisplaySearchButton = (Button) findViewById(R.id.display_searchButton);
+//        mDisplaySearchField = (EditText) findViewById(R.id.display_searchField);
+//        mDisplaySearchButton = (Button) findViewById(R.id.display_searchButton);
         mDisplayTable = (ListView) findViewById(R.id.display_table);
         mSubmitButton = (Button) findViewById(R.id.submit_button);
 
@@ -64,7 +65,7 @@ public class DisplayActivity extends AppCompatActivity {
                 returnIntent(bundle);
             }
         });
-        mDisplaySearchButton.setVisibility(View.GONE);
+//        mDisplaySearchButton.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         int whichOption = intent.getIntExtra(MainActivity.OPT_KEY, 0);
@@ -95,9 +96,10 @@ public class DisplayActivity extends AppCompatActivity {
                 mDisplayNewPicture.setImageURI(Uri.fromFile(new File(text)));
                 break;
             case 3:
-                mDisplaySearchField.setVisibility(View.VISIBLE);
-                mDisplaySearchButton.setVisibility(View.VISIBLE);
+//                mDisplaySearchField.setVisibility(View.VISIBLE);
+//                mDisplaySearchButton.setVisibility(View.VISIBLE);
                 mDisplayTable.setVisibility(View.VISIBLE);
+                setupSearchResults();
                 break;
             default:
                 break;
@@ -113,8 +115,8 @@ public class DisplayActivity extends AppCompatActivity {
                 mDisplayNewPicture.setVisibility(View.GONE);
                 break;
             case 3:
-                mDisplaySearchField.setVisibility(View.GONE);
-                mDisplaySearchButton.setVisibility(View.GONE);
+//                mDisplaySearchField.setVisibility(View.GONE);
+//                mDisplaySearchButton.setVisibility(View.GONE);
                 mDisplayTable.setVisibility(View.GONE);
             default:
 
@@ -132,9 +134,15 @@ public class DisplayActivity extends AppCompatActivity {
     private void hideWidgets() {
         mDisplayNoteEntry.setVisibility(View.GONE);
         mDisplayNewPicture.setVisibility(View.GONE);
-        mDisplaySearchField.setVisibility(View.GONE);
-        mDisplaySearchButton.setVisibility(View.GONE);
+//        mDisplaySearchField.setVisibility(View.GONE);
+//        mDisplaySearchButton.setVisibility(View.GONE);
         mDisplayTable.setVisibility(View.GONE);
+    }
+
+    private void setupSearchResults() {
+        listAdapter = new SearchArrayAdapter(this, R.layout.list_item, results);
+        mDisplayTable.setAdapter(listAdapter);
+        mDisplayTable.deferNotifyDataSetChanged();
     }
 
 //    interface DisplayScreenListener {

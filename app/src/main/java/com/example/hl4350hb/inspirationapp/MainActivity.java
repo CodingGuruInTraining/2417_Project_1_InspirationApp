@@ -375,13 +375,13 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                                 field = 2;
                             }
                             ArrayList<PictureEntry> results = dbManager.findNote(search, field);
-                            Intent intent = new Intent();
+                            Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
                             intent.putParcelableArrayListExtra(SRCH_KEY, results);
                             intent.putExtra(OPT_KEY, 3);
                             startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
 
 
-//                            dialog.dismiss();
+                            dialog.dismiss();
                         }
                     }
                 });
@@ -416,4 +416,6 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // custom auto-scale ImageView - https://www.ryadel.com/en/android-proportionally-stretch-imageview-fit-whole-screen-width-maintaining-aspect-ratio/
     // align widget on bottom - https://stackoverflow.com/questions/25159572/how-to-display-widget-at-bottom-of-screen-android
     // dialog box setup - https://examples.javacodegeeks.com/android/core/ui/dialog/android-custom-dialog-example/
+    // query with LIKE - https://stackoverflow.com/questions/16416827/android-sqlite-select-from-table-where-name-like-key-using-prepared-statemen
+    // convert class to parce - http://www.parcelabler.com/
 

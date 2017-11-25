@@ -21,25 +21,25 @@
         android:visibility="gone"
         android:adjustViewBounds="true"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        android:id="@+id/display_searchField"
-        android:hint="Search..."/>
+    <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/display_searchField"-->
+        <!--android:hint="Search..."/>-->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/display_searchField"
-        android:text="Search"
-        android:id="@+id/display_searchButton"
-        android:visibility="gone"/>
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/display_searchField"-->
+        <!--android:text="Search"-->
+        <!--android:id="@+id/display_searchButton"-->
+        <!--android:visibility="gone"/>-->
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/display_searchButton"
+
         android:id="@+id/display_table"
         android:visibility="gone">
 
@@ -48,7 +48,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/display_table"
+
         android:layout_gravity="bottom"
         android:id="@+id/submit_button"
         android:text="Finish"

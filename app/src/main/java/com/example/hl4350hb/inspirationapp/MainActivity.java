@@ -2,6 +2,7 @@ package com.example.hl4350hb.inspirationapp;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // saving new pictures.
     private long currTime;
 
+
+    private boolean longClick = false;
 
 
 
@@ -317,8 +321,44 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String query = dbManager.findNote((int)id);
-                notifyNoteChanged((int)id, query, 1);
+                if (longClick) {
+                    longClick = false;
+                } else {
+                    String query = dbManager.findNote((int) id);
+                    notifyNoteChanged((int) id, query, 1);
+                }
+            }
+        });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, final long id) {
+
+                longClick = true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("Delete forever???");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dbManager.deleteNote((int)id);
+                        cursorListAdapter.changeCursor(dbManager.getAllPics());
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+//                Toast.makeText(MainActivity.this, "Keep holding to delete!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Almost there!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Just a little bit longer...", Toast.LENGTH_SHORT).show();
+//                dbManager.deleteNote((int)id);
+                return false;
             }
         });
 
@@ -418,4 +458,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // dialog box setup - https://examples.javacodegeeks.com/android/core/ui/dialog/android-custom-dialog-example/
     // query with LIKE - https://stackoverflow.com/questions/16416827/android-sqlite-select-from-table-where-name-like-key-using-prepared-statemen
     // convert class to parce - http://www.parcelabler.com/
+    // prevent onitemclick overriding long click - https://stackoverflow.com/questions/6183874/android-detect-end-of-long-press
 

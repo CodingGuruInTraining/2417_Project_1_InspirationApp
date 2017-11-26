@@ -122,6 +122,11 @@ public class DatabaseManager {
         return null;
     }
 
+    public boolean deleteNote(int id) {
+        db.delete(DB_TABLE, ID_COL + "=" + id, null);
+        return true;
+    }
+
 
     public class SQLHelper extends SQLiteOpenHelper {
         public SQLHelper(Context c) {

@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // Key value used to maintain image during rotations.
     private static final String IMAGE_FILEPATH_KEY = "aKeyForFilepath";
 
+    // Static keys for passing values between Activities.
     protected static final String NOTE_KEY = "note key";
     protected static final String PIC_KEY = "picture time";
     protected static final String SRCH_KEY = "search";
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // saving new pictures.
     private long currTime;
 
-
+    // Global boolean flag used to prevent ListView click
+    // events from simultaneously activating.
     private boolean longClick = false;
 
 
@@ -118,22 +120,28 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         mSaveButton = (Button) findViewById(R.id.save_button);
         mSearchButton = (Button) findViewById(R.id.search_route_button);
 
+
         // Creates database and its components.
         dbManager = new DatabaseManager(this);
         Cursor cursor = dbManager.getAllPics();
 
+
         // FOR TESTING - Shows all the database entries while debugging.
         String data = DatabaseUtils.dumpCursorToString(cursor);
+
 
         // Instantiates CursorAdapter and is assigned to the ListView.
         cursorListAdapter = new NoteCursorAdapter(this, cursor, true);
         mListView.setAdapter(cursorListAdapter);
 
+
         // Function to add the listeners to widgets.
         addListeners();
 
+
         // Forces widgets to stay where they are when the keyboard appears.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+
 
         // Puts the focus in the EditText to start typing right away.
         mNoteEntry.setFocusableInTouchMode(true);
@@ -153,14 +161,18 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            // Save captured image to device and database.
             if (requestCode == CAMERA_ACCESS_REQUEST_CODE) {
                 saveImage();
             }
+            // Receive new value from DisplayActivity.
             else if (requestCode == DISPLAYER_REQUEST_CODE) {
                 Bundle bundle = data.getBundleExtra(DisplayActivity.EXTRA_FROM_DISPLAYER);
+                // Both keys will be present if coming from DisplayActivity.
                 if (bundle.containsKey(NOTE_KEY) && bundle.containsKey(ID_KEY)) {
                     int rowId = bundle.getInt(ID_KEY, 0);
                     String newNote = bundle.getString(NOTE_KEY);
+                    // Update entry in database and then refresh CursorAdapter.
                     dbManager.updateNote(rowId, newNote);
                     cursorListAdapter.changeCursor(dbManager.getAllPics());
                 }
@@ -176,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         if (hasFocus && mImagePath != null) {
             scalePicture();
             mNewPicture.setImageBitmap(mImage);
+            // Makes widgets appear again.
             mHashtagEntry.setVisibility(View.VISIBLE);
             mSaveButton.setVisibility(View.VISIBLE);
             mNoteEntry.setVisibility(View.VISIBLE);
@@ -202,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         }
     }
 
-    @Override   // Return function from CursorAdapter.
+    @Override   // Return function from CursorAdapter about clicked item.
     // Starts DisplayActivity.
     public void notifyNoteChanged(int rowId, String text, int which) {
         Intent intent = new Intent(this, DisplayActivity.class);
@@ -308,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         }
     }
 
+    // Collective method for attaching multiple listeners to widgets onCreate.
     private void addListeners() {
         // Defines click event for Picture button.
         mPicButton.setOnClickListener(new View.OnClickListener() {
@@ -318,8 +332,12 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             }
         });
 
+
+        // ListView's single-click event.
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
+            // This event is used as a workaround for attaching an event to TextView.
+            // The same method is called.
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (longClick) {
                     longClick = false;
@@ -330,16 +348,21 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             }
         });
 
+
+        // ListView's long-click event.
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
+            // Method used for deleting entries from the ListView as well as the database.
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, final long id) {
-
+                // Sets global boolean flag.
                 longClick = true;
+                // Builds dialog box to confirm deletion prior to action.
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setMessage("Delete forever???");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // Delete item from database and updates the CursorAdapter.
                         dbManager.deleteNote((int)id);
                         cursorListAdapter.changeCursor(dbManager.getAllPics());
                         dialogInterface.dismiss();
@@ -351,17 +374,16 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                         dialogInterface.dismiss();
                     }
                 });
+                // Displays dialog box.
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-//                Toast.makeText(MainActivity.this, "Keep holding to delete!", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(MainActivity.this, "Almost there!", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(MainActivity.this, "Just a little bit longer...", Toast.LENGTH_SHORT).show();
-//                dbManager.deleteNote((int)id);
                 return false;
             }
         });
 
+
+        // Save button click event.
+        // Button appears after taking a new picture.
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -388,39 +410,49 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
             }
         });
 
+
+        // Search button click event.
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Creates new dialog object.
                 final Dialog dialog = new Dialog(MainActivity.this);
-
+                // Sets dialog objects' values.
                 dialog.setContentView(R.layout.dialog_search);
                 dialog.setTitle("Search Through Pictures");
 
+                // Sets up custom dialog's widgets.
                 final EditText searchText = (EditText) dialog.findViewById(R.id.dialog_edittext);
                 final RadioButton noteRadio = (RadioButton) dialog.findViewById(R.id.dialog_notes_radio);
                 final RadioButton hashRadio = (RadioButton) dialog.findViewById(R.id.dialog_hash_radio);
                 Button okButton = (Button) dialog.findViewById(R.id.dialog_search_button);
                 Button cancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
 
+                // OK button click event.
                 okButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Grabs string value from widget.
                         String search = searchText.getText().toString();
+                        // Verifies something is entered in EditText and a radio button is selected.
                         if (!search.equals("") && (noteRadio.isChecked() || hashRadio.isChecked())) {
-                            // TODO query database
+                            // Determines which radio button was selected to indicate
+                            // which database column to search in.
                             int field;
                             if (noteRadio.isChecked()) {
                                 field = 1;
                             } else {
                                 field = 2;
                             }
+                            // Queries database and receives arraylist in return.
                             ArrayList<PictureEntry> results = dbManager.findNote(search, field);
+
+                            // Creates new Intent and starts DisplayActivity.
                             Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
                             intent.putParcelableArrayListExtra(SRCH_KEY, results);
                             intent.putExtra(OPT_KEY, 3);
                             startActivityForResult(intent, DISPLAYER_REQUEST_CODE);
-
-
+                            // Closes dialog box.
                             dialog.dismiss();
                         }
                     }
@@ -432,7 +464,7 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                         dialog.dismiss();
                     }
                 });
-
+                // Displays dialog box.
                 dialog.show();
             }
         });

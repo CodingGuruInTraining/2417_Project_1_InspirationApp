@@ -5,9 +5,6 @@
               android:descendantFocusability="blocksDescendants"
     >
 
-    <!--<TableRow-->
-        <!--android:layout_width="match_parent"-->
-        <!--&gt;-->
         <ImageView
             android:id="@+id/img"
             android:layout_width="50dp"
@@ -33,6 +30,5 @@
             android:textAlignment="gravity"
             android:layout_gravity="end"
             />
-    <!--</TableRow>-->
 
 </LinearLayout>

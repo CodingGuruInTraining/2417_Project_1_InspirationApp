@@ -4,22 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- *
+ *  Object Class for holding values for individual images/notes.
  */
 
 public class PictureEntry implements Parcelable{
 
-/** TODO replace arrays with one array of these objects.
-    The position in getView should still reference the
-    correct index.
-    The takePhoto method seems like a suitable location f
-    or now.
- **/
+    // Attributes.
     protected String note;
     protected String imageId;
     protected long picTime;
     protected String hashtags;
 
+
+    // Constructor.
     public PictureEntry(String note, String imageId, long time, String hashtags) {
         this.note = note;
         this.imageId = imageId;
@@ -27,6 +24,7 @@ public class PictureEntry implements Parcelable{
         this.hashtags = hashtags;
     }
 
+    // Getters.
     public String getNote() {
         return note;
     }
@@ -40,6 +38,12 @@ public class PictureEntry implements Parcelable{
     }
 
     public String getHashtags() { return hashtags; }
+
+
+
+//
+// PARCELABLE METHODS
+//
 
     protected PictureEntry(Parcel in) {
         note = in.readString();

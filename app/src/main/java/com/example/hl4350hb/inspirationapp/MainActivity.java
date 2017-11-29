@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -175,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                     // Update entry in database and then refresh CursorAdapter.
                     dbManager.updateNote(rowId, newNote);
                     cursorListAdapter.changeCursor(dbManager.getAllPics());
+                    mNoteEntry.setVisibility(View.GONE);
+                    mHashtagEntry.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+                    mNewPicture.setImageResource(android.R.color.transparent);
+                    mSaveButton.setVisibility(View.GONE);
                 }
             }
         }
@@ -321,6 +327,9 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
         }
     }
 
+
+
+
     // Collective method for attaching multiple listeners to widgets onCreate.
     private void addListeners() {
         // Defines click event for Picture button.
@@ -421,6 +430,12 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
                 dialog.setContentView(R.layout.dialog_search);
                 dialog.setTitle("Search Through Pictures");
 
+                // Sets size of window; otherwise, window is cut off.
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                int width = metrics.widthPixels;
+                int height = metrics.heightPixels;
+                dialog.getWindow().setLayout((6*width)/6, height/3);
+
                 // Sets up custom dialog's widgets.
                 final EditText searchText = (EditText) dialog.findViewById(R.id.dialog_edittext);
                 final RadioButton noteRadio = (RadioButton) dialog.findViewById(R.id.dialog_notes_radio);
@@ -491,4 +506,5 @@ public class MainActivity extends AppCompatActivity implements NoteCursorAdapter
     // query with LIKE - https://stackoverflow.com/questions/16416827/android-sqlite-select-from-table-where-name-like-key-using-prepared-statemen
     // convert class to parce - http://www.parcelabler.com/
     // prevent onitemclick overriding long click - https://stackoverflow.com/questions/6183874/android-detect-end-of-long-press
+    // resizing dialog box window - https://stackoverflow.com/questions/19133822/custom-dialog-too-small
 
